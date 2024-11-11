@@ -2,6 +2,8 @@
 
 A web-based tool to create animated "pet pet" GIF effects from any image. Upload an image and generate a cute animation of a hand patting it.
 
+![petme](og.png)
+
 ## Features
 
 - Drag and drop or click to upload images (PNG, JPG, GIF supported)
