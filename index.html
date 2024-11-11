@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pet Pet Effect Generator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f5f5f5;
+      font-family: system-ui, -apple-system, sans-serif;
+      color: black;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      padding: 1.5rem;
+      background-color: white;
+      border: 2px solid black;
+      box-shadow: 4px 4px 0 black;
+      margin: 1rem;
+    }
+
+    .dropzone {
+      border: 2px dashed black;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      margin-bottom: 1rem;
+      transition: all 0.2s;
+      background-color: white;
+    }
+
+    .preview-image {
+      max-width: 100%;
+      height: 12rem;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .button {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      border: 2px solid black;
+      cursor: pointer;
+      margin: 0.5rem 0;
+      font-weight: 500;
+      transition: all 0.2s;
+      background-color: white;
+      color: black;
+      box-shadow: 3px 3px 0 black;
+    }
+
+    .button:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0 black;
+    }
+
+    .button:active {
+      transform: translate(0, 0);
+      box-shadow: 0 0 0 black;
+    }
+
+    .button-primary {
+      background-color: black;
+      color: white;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 0.5rem;
+      background-color: white;
+      color: black;
+      font-size: 0.875rem;
+      border: 2px solid black;
+    }
+
+    .parameters {
+      margin: 1rem 0;
+      padding: 1rem;
+      border: 2px solid black;
+      background-color: #fafafa;
+    }
+
+    .parameter-group {
+      margin-bottom: 0.875rem;
+    }
+
+    .parameter-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .parameter-group label {
+      display: block;
+      margin-bottom: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .parameter-group input {
+      width: 100%;
+      padding: 0.375rem;
+      border: 1px solid black;
+      font-size: 0.875rem;
+    }
+
+    .parameter-group input[type="range"] {
+      appearance: none;
+      height: 0.25rem;
+      background: black;
+      border: none;
+    }
+
+    .parameter-group input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 1rem;
+      height: 1rem;
+      background: black;
+      border-radius: 0;
+      cursor: pointer;
+    }
+
+    .parameter-group input[type="range"]::-moz-range-thumb {
+      width: 1rem;
+      height: 1rem;
+      background: black;
+      border: none;
+      border-radius: 0;
+      cursor: pointer;
+    }
+
+    .parameter-group input[type="range"]::-ms-thumb {
+      width: 1rem;
+      height: 1rem;
+      background: black;
+      border: none;
+      border-radius: 0;
+      cursor: pointer;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        display: block;
+        max-width: 500px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="dropzone" id="dropzone">
+      <div id="dropzone-text">
+        <svg width="32" height="32" viewBox="0 0 20 16" fill="none" stroke="currentColor" style="margin: 0 auto 1rem;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+        </svg>
+        <p><strong>Click to upload</strong> or drag and drop</p>
+        <p style="font-size: 0.875rem;">PNG, JPG or GIF</p>
+      </div>
+      <img id="preview" class="preview-image" style="display: none;">
+      <input type="file" id="file-input" hidden accept="image/*">
+    </div>
+
+    <div class="parameters" id="parameters" style="display: none;">
+      <h3 style="margin-top: 0;">Parameters</h3>
+
+      <div class="parameter-group">
+        <label for="resolution">Resolution (px)</label>
+        <input type="number" id="resolution" value="256" step="1">
+      </div>
+
+      <div class="parameter-group">
+        <label for="frames">Number of Frames</label>
+        <input type="number" id="frames" value="10" min="5" max="20" step="1">
+      </div>
+
+      <div class="parameter-group">
+        <label for="delay">Frame Delay (ms)</label>
+        <input type="number" id="delay" value="20" min="10" max="100" step="1">
+      </div>
+    </div>
+
+    <button id="generate" class="button button-primary" style="display: none;">
+      Generate Pet Effect
+    </button>
+
+    <div id="loading" class="loading" style="display: none;">
+      Generating...
+    </div>
+
+    <div id="result" style="display: none;">
+      <div style="border: 2px solid #000; padding: 1rem; margin: 1rem 0; background: #fff; box-shadow: 5px 5px 0px #000;">
+        <img id="result-image" class="preview-image">
+      </div>
+      
+      <div class="button-group">
+        <button id="download" class="button">Download GIF</button>
+      </div>
+    </div>
+
+    <button id="remove" class="button" style="display: none;">
+      Remove Image
+    </button>
+  </div>
+
+  <script type="module">
+    import { GIFEncoder, quantize, applyPalette } from './gifenc.js';
+
+    const DEFAULT_RESOLUTION = 1024;
+    const FRAMES = 10;
+    const DEFAULT_DELAY = 20;
+
+    let currentImage = null;
+    let petImage = null;
+
+    const parameters = document.getElementById('parameters');
+    const resolutionInput = document.getElementById('resolution');
+    const framesInput = document.getElementById('frames');
+    const delayInput = document.getElementById('delay');
+
+    async function loadImage(source) {
+      const isFile = source instanceof File;
+      const url = isFile ? URL.createObjectURL(source) : source;
+
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        if (!isFile) {
+          img.crossOrigin = "anonymous";
+        }
+        img.onload = () => {
+          if (isFile) URL.revokeObjectURL(url);
+          resolve(img);
+        };
+        img.onerror = (event) => reject(event);
+        img.src = url;
+      });
+    }
+
+    async function createPetEffect(inputImage, resolution = DEFAULT_RESOLUTION, frameCount = FRAMES, delay = DEFAULT_DELAY) {
+      const frames = await Promise.all(
+        Array.from({ length: frameCount }, (_, i) =>
+          loadImage(`https://raw.githubusercontent.com/VenPlugs/petpet/main/frames/pet${i % 10}.gif`)
+        )
+      );
+
+      const avatar = await loadImage(inputImage);
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = resolution;
+      const ctx = canvas.getContext('2d');
+
+      const gif = new GIFEncoder();
+      
+      for (let i = 0; i < frameCount; i++) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const j = i < frameCount / 2 ? i : frameCount - i;
+        const width = 0.8 + j * 0.02;
+        const height = 0.8 - j * 0.05;
+        const offsetX = (1 - width) * 0.5 + 0.1;
+        const offsetY = 1 - height - 0.08;
+
+        ctx.drawImage(
+          avatar,
+          offsetX * resolution,
+          offsetY * resolution,
+          width * resolution,
+          height * resolution
+        );
+        ctx.drawImage(frames[i], 0, 0, resolution, resolution);
+
+        const imageData = ctx.getImageData(0, 0, resolution, resolution);
+        const { data } = imageData;
+        
+        const pixels = new Uint8Array(data.buffer);
+        const palette = quantize(pixels, 256);
+        const index = applyPalette(pixels, palette);
+
+        gif.writeFrame(index, resolution, resolution, {
+          transparent: true,
+          palette,
+          delay: delay,
+        });
+      }
+
+      gif.finish();
+      const blob = new Blob([gif.bytes()], { type: "image/gif" });
+      const url = URL.createObjectURL(blob);
+      return { url, blob };
+    }
+
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+    const preview = document.getElementById('preview');
+    const dropzoneText = document.getElementById('dropzone-text');
+    const generateBtn = document.getElementById('generate');
+    const loadingDiv = document.getElementById('loading');
+    const resultDiv = document.getElementById('result');
+    const resultImage = document.getElementById('result-image');
+    const removeBtn = document.getElementById('remove');
+    const downloadBtn = document.getElementById('download');
+
+    function handleImageUpload(file) {
+      const imageUrl = URL.createObjectURL(file);
+      currentImage = imageUrl;
+      preview.src = imageUrl;
+      preview.style.display = 'block';
+      dropzoneText.style.display = 'none';
+      generateBtn.style.display = 'block';
+      removeBtn.style.display = 'block';
+      resultDiv.style.display = 'none';
+      petImage = null;
+      parameters.style.display = 'block';
+    }
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.style.backgroundColor = '#f3f4f6';
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.style.backgroundColor = '';
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.style.backgroundColor = '';
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        handleImageUpload(file);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        handleImageUpload(file);
+      }
+    });
+
+    generateBtn.addEventListener('click', async () => {
+      if (!currentImage) return;
+      
+      generateBtn.style.display = 'none';
+      loadingDiv.style.display = 'block';
+      parameters.style.display = 'none';
+      
+      try {
+        const { url, blob } = await createPetEffect(
+          currentImage,
+          parseInt(resolutionInput.value),
+          parseInt(framesInput.value),
+          parseInt(delayInput.value)
+        );
+        petImage = { url, blob };
+        resultImage.src = url;
+        resultDiv.style.display = 'block';
+      } catch (error) {
+        console.error('Failed to create pet effect:', error);
+        parameters.style.display = 'block';
+      } finally {
+        loadingDiv.style.display = 'none';
+      }
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      if (!petImage) return;
+      const link = document.createElement('a');
+      link.href = petImage.url;
+      link.download = 'pet-effect.gif';
+      link.click();
+    });
+
+    removeBtn.addEventListener('click', () => {
+      currentImage = null;
+      petImage = null;
+      preview.style.display = 'none';
+      dropzoneText.style.display = 'block';
+      generateBtn.style.display = 'none';
+      removeBtn.style.display = 'none';
+      resultDiv.style.display = 'none';
+      fileInput.value = '';
+      parameters.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
