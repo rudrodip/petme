@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pet Pet Effect Generator</title>
-    <meta name="description" content="Create animated pet-pet GIFs from any image" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pet Pet Effect Generator</title>
+    <meta
+      name="description"
+      content="Create animated pet-pet GIFs from any image"
+    />
     <meta name="author" content="rds_agi" />
     <meta name="keywords" content="pet, gif, generator, animation, meme" />
     <meta name="robots" content="index, follow" />
     <meta property="og:title" content="Pet Pet Effect Generator" />
-    <meta property="og:description" content="Create animated pet-pet GIFs from any image" />
+    <meta
+      property="og:description"
+      content="Create animated pet-pet GIFs from any image"
+    />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://petme.rdsx.dev" />
     <meta property="og:image" content="https://petme.rdsx.dev/og.png" />
@@ -19,406 +25,528 @@
     <meta name="twitter:site" content="@rds_agi" />
     <meta name="twitter:creator" content="@rds_agi" />
     <meta name="twitter:title" content="Pet Pet Effect Generator" />
-    <meta name="twitter:description" content="Create animated pet-pet GIFs from any image" />
+    <meta
+      name="twitter:description"
+      content="Create animated pet-pet GIFs from any image"
+    />
     <meta name="twitter:image" content="https://petme.rdsx.dev/og.png" />
     <meta name="twitter:url" content="https://petme.rdsx.dev" />
     <meta name="twitter:domain" content="petme.rdsx.dev" />
 
-    <link rel="shortcut icon" href="https://rdsx.dev/favicon.png" type="image/x-icon">
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      min-height: 100vh;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #f5f5f5;
-      font-family: system-ui, -apple-system, sans-serif;
-      color: black;
-      padding: 1rem;
-    }
-
-    .container {
-      max-width: 600px;
-      width: 100%;
-      padding: 1.5rem;
-      background-color: white;
-      border: 2px solid black;
-      box-shadow: 4px 4px 0 black;
-      margin: 1rem;
-    }
-
-    .dropzone {
-      border: 2px dashed black;
-      padding: 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      margin-bottom: 1rem;
-      transition: all 0.2s;
-      background-color: white;
-    }
-
-    .preview-image {
-      max-width: 100%;
-      height: 12rem;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto;
-    }
-
-    .button {
-      width: 100%;
-      padding: 0.6rem 1rem;
-      border: 2px solid black;
-      cursor: pointer;
-      margin: 0.5rem 0;
-      font-weight: 500;
-      transition: all 0.2s;
-      background-color: white;
-      color: black;
-      box-shadow: 3px 3px 0 black;
-    }
-
-    .button:hover {
-      transform: translate(-2px, -2px);
-      box-shadow: 5px 5px 0 black;
-    }
-
-    .button:active {
-      transform: translate(0, 0);
-      box-shadow: 0 0 0 black;
-    }
-
-    .button-primary {
-      background-color: black;
-      color: white;
-    }
-
-    .button-group {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 0.5rem;
-      background-color: white;
-      color: black;
-      font-size: 0.875rem;
-      border: 2px solid black;
-    }
-
-    .parameters {
-      margin: 1rem 0;
-      padding: 1rem;
-      border: 2px solid black;
-      background-color: #fafafa;
-    }
-
-    .parameter-group {
-      margin-bottom: 0.875rem;
-    }
-
-    .parameter-group:last-child {
-      margin-bottom: 0;
-    }
-
-    .parameter-group label {
-      display: block;
-      margin-bottom: 0.375rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-
-    .parameter-group input {
-      width: 100%;
-      padding: 0.375rem;
-      border: 1px solid black;
-      font-size: 0.875rem;
-    }
-
-    .parameter-group input[type="range"] {
-      appearance: none;
-      height: 0.25rem;
-      background: black;
-      border: none;
-    }
-
-    .parameter-group input[type="range"]::-webkit-slider-thumb {
-      appearance: none;
-      width: 1rem;
-      height: 1rem;
-      background: black;
-      border-radius: 0;
-      cursor: pointer;
-    }
-
-    .parameter-group input[type="range"]::-moz-range-thumb {
-      width: 1rem;
-      height: 1rem;
-      background: black;
-      border: none;
-      border-radius: 0;
-      cursor: pointer;
-    }
-
-    .parameter-group input[type="range"]::-ms-thumb {
-      width: 1rem;
-      height: 1rem;
-      background: black;
-      border: none;
-      border-radius: 0;
-      cursor: pointer;
-    }
-
-    @media (min-width: 768px) {
-      .container {
-        display: block;
-        max-width: 500px;
+    <link
+      rel="shortcut icon"
+      href="https://rdsx.dev/favicon.png"
+      type="image/x-icon"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
       }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="dropzone" id="dropzone">
-      <div id="dropzone-text">
-        <svg width="32" height="32" viewBox="0 0 20 16" fill="none" stroke="currentColor" style="margin: 0 auto 1rem;">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-        </svg>
-        <p><strong>Click to upload</strong> or drag and drop</p>
-        <p style="font-size: 0.875rem;">PNG, JPG or GIF</p>
-      </div>
-      <img id="preview" class="preview-image" style="display: none;">
-      <input type="file" id="file-input" hidden accept="image/*">
-    </div>
 
-    <div class="parameters" id="parameters" style="display: none;">
-      <h3 style="margin-top: 0;">Parameters</h3>
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f5f5f5;
+        font-family: system-ui, -apple-system, sans-serif;
+        color: black;
+        padding: 1rem;
+      }
 
-      <div class="parameter-group">
-        <label for="resolution">Resolution (px)</label>
-        <input type="number" id="resolution" value="256" step="1">
-      </div>
+      .container {
+        max-width: 600px;
+        width: 100%;
+        padding: 1.5rem;
+        background-color: white;
+        border: 2px solid black;
+        box-shadow: 4px 4px 0 black;
+        margin: 1rem;
+      }
 
-      <div class="parameter-group">
-        <label for="frames">Number of Frames</label>
-        <input type="number" id="frames" value="10" min="5" max="20" step="1">
-      </div>
+      .dropzone {
+        border: 2px dashed black;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        margin-bottom: 1rem;
+        transition: all 0.2s;
+        background-color: white;
+      }
 
-      <div class="parameter-group">
-        <label for="delay">Frame Delay (ms)</label>
-        <input type="number" id="delay" value="20" min="10" max="100" step="1">
-      </div>
-    </div>
+      .preview-image {
+        max-width: 100%;
+        height: 12rem;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+      }
 
-    <button id="generate" class="button button-primary" style="display: none;">
-      Generate Pet Effect
-    </button>
+      .button {
+        width: 100%;
+        padding: 0.6rem 1rem;
+        border: 2px solid black;
+        cursor: pointer;
+        margin: 0.5rem 0;
+        font-weight: 500;
+        transition: all 0.2s;
+        background-color: white;
+        color: black;
+        box-shadow: 3px 3px 0 black;
+      }
 
-    <div id="loading" class="loading" style="display: none;">
-      Generating...
-    </div>
+      .button:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 5px 5px 0 black;
+      }
 
-    <div id="result" style="display: none;">
-      <div style="border: 2px solid #000; padding: 1rem; margin: 1rem 0; background: #fff; box-shadow: 5px 5px 0px #000;">
-        <img id="result-image" class="preview-image">
-      </div>
-      
-      <div class="button-group">
-        <button id="download" class="button">Download GIF</button>
-      </div>
-    </div>
+      .button:active {
+        transform: translate(0, 0);
+        box-shadow: 0 0 0 black;
+      }
 
-    <button id="remove" class="button" style="display: none;">
-      Remove Image
-    </button>
-  </div>
+      .button-primary {
+        background-color: black;
+        color: white;
+      }
 
-  <script type="module">
-    import { GIFEncoder, quantize, applyPalette } from './gifenc.js';
+      .button-group {
+        display: flex;
+        gap: 0.5rem;
+      }
 
-    const DEFAULT_RESOLUTION = 1024;
-    const FRAMES = 10;
-    const DEFAULT_DELAY = 20;
+      .loading {
+        text-align: center;
+        padding: 0.5rem;
+        background-color: white;
+        color: black;
+        font-size: 0.875rem;
+        border: 2px solid black;
+      }
 
-    let currentImage = null;
-    let petImage = null;
+      .parameters {
+        margin: 1rem 0;
+        padding: 1rem;
+        border: 2px solid black;
+        background-color: #fafafa;
+      }
 
-    const parameters = document.getElementById('parameters');
-    const resolutionInput = document.getElementById('resolution');
-    const framesInput = document.getElementById('frames');
-    const delayInput = document.getElementById('delay');
+      .parameter-group {
+        margin-bottom: 0.875rem;
+      }
 
-    async function loadImage(source) {
-      const isFile = source instanceof File;
-      const url = isFile ? URL.createObjectURL(source) : source;
+      .parameter-group:last-child {
+        margin-bottom: 0;
+      }
 
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        if (!isFile) {
-          img.crossOrigin = "anonymous";
+      .parameter-group label {
+        display: block;
+        margin-bottom: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .parameter-group input {
+        width: 100%;
+        padding: 0.375rem;
+        border: 1px solid black;
+        font-size: 0.875rem;
+      }
+
+      .parameter-group input[type="range"] {
+        appearance: none;
+        height: 0.25rem;
+        background: black;
+        border: none;
+      }
+
+      .parameter-group input[type="range"]::-webkit-slider-thumb {
+        appearance: none;
+        width: 1rem;
+        height: 1rem;
+        background: black;
+        border-radius: 0;
+        cursor: pointer;
+      }
+
+      .parameter-group input[type="range"]::-moz-range-thumb {
+        width: 1rem;
+        height: 1rem;
+        background: black;
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+      }
+
+      .parameter-group input[type="range"]::-ms-thumb {
+        width: 1rem;
+        height: 1rem;
+        background: black;
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+      }
+
+      .github-link {
+        width: 3rem;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border: 2px solid black;
+        border-radius: 0.25rem;
+        padding: 0.1rem;
+        box-shadow: 3px 3px 0 black;
+        transition: all 0.2s;
+      }
+
+      .github-link:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 5px 5px 0 black;
+      }
+
+      .github-link:active {
+        transform: translate(0, 0);
+        box-shadow: 0 0 0 black;
+      }
+
+      @media (min-width: 768px) {
+        .container {
+          display: block;
+          max-width: 500px;
         }
-        img.onload = () => {
-          if (isFile) URL.revokeObjectURL(url);
-          resolve(img);
-        };
-        img.onerror = (event) => reject(event);
-        img.src = url;
-      });
-    }
 
-    async function createPetEffect(inputImage, resolution = DEFAULT_RESOLUTION, frameCount = FRAMES, delay = DEFAULT_DELAY) {
-      const frames = await Promise.all(
-        Array.from({ length: frameCount }, (_, i) =>
-          loadImage(`https://raw.githubusercontent.com/VenPlugs/petpet/main/frames/pet${i % 10}.gif`)
-        )
-      );
+        .github-link {
+          width: 2rem;
+          height: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="dropzone" id="dropzone">
+        <div id="dropzone-text">
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 20 16"
+            fill="none"
+            stroke="currentColor"
+            style="margin: 0 auto 1rem"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+            />
+          </svg>
+          <p><strong>Click to upload</strong> or drag and drop</p>
+          <p style="font-size: 0.875rem">PNG, JPG or GIF</p>
+        </div>
+        <img id="preview" class="preview-image" style="display: none" />
+        <input type="file" id="file-input" hidden accept="image/*" />
+      </div>
 
-      const avatar = await loadImage(inputImage);
-      const canvas = document.createElement('canvas');
-      canvas.width = canvas.height = resolution;
-      const ctx = canvas.getContext('2d');
+      <div class="parameters" id="parameters" style="display: none">
+        <h3 style="margin-top: 0">Parameters</h3>
 
-      const gif = new GIFEncoder();
-      
-      for (let i = 0; i < frameCount; i++) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        <div class="parameter-group">
+          <label for="resolution">Resolution (px)</label>
+          <input type="number" id="resolution" value="256" step="1" />
+        </div>
 
-        const j = i < frameCount / 2 ? i : frameCount - i;
-        const width = 0.8 + j * 0.02;
-        const height = 0.8 - j * 0.05;
-        const offsetX = (1 - width) * 0.5 + 0.1;
-        const offsetY = 1 - height - 0.08;
+        <div class="parameter-group">
+          <label for="frames">Number of Frames</label>
+          <input
+            type="number"
+            id="frames"
+            value="10"
+            min="5"
+            max="20"
+            step="1"
+          />
+        </div>
 
-        ctx.drawImage(
-          avatar,
-          offsetX * resolution,
-          offsetY * resolution,
-          width * resolution,
-          height * resolution
-        );
-        ctx.drawImage(frames[i], 0, 0, resolution, resolution);
+        <div class="parameter-group">
+          <label for="delay">Frame Delay (ms)</label>
+          <input
+            type="number"
+            id="delay"
+            value="20"
+            min="10"
+            max="100"
+            step="1"
+          />
+        </div>
+      </div>
 
-        const imageData = ctx.getImageData(0, 0, resolution, resolution);
-        const { data } = imageData;
-        
-        const pixels = new Uint8Array(data.buffer);
-        const palette = quantize(pixels, 256);
-        const index = applyPalette(pixels, palette);
+      <button id="generate" class="button button-primary" style="display: none">
+        Generate Pet Effect
+      </button>
 
-        gif.writeFrame(index, resolution, resolution, {
-          transparent: true,
-          palette,
-          delay: delay,
+      <div id="loading" class="loading" style="display: none">
+        Generating...
+      </div>
+
+      <div id="result" style="display: none">
+        <div
+          style="
+            border: 2px solid #000;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: #fff;
+            box-shadow: 5px 5px 0px #000;
+          "
+        >
+          <img id="result-image" class="preview-image" />
+        </div>
+
+        <div class="button-group">
+          <button id="download" class="button">Download GIF</button>
+        </div>
+      </div>
+
+      <button id="remove" class="button" style="display: none">
+        Remove Image
+      </button>
+
+      <div
+        style="
+          position: fixed;
+          bottom: 1rem;
+          right: 1rem;
+          display: flex;
+          gap: 0.5rem;
+        "
+      >
+        <a href="https://x.com/rds_agi" target="_blank" class="github-link">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            x="0px"
+            y="0px"
+            width="100"
+            height="100"
+            viewBox="0 0 50 50"
+          >
+            <path
+              d="M 5.9199219 6 L 20.582031 27.375 L 6.2304688 44 L 9.4101562 44 L 21.986328 29.421875 L 31.986328 44 L 44 44 L 28.681641 21.669922 L 42.199219 6 L 39.029297 6 L 27.275391 19.617188 L 17.933594 6 L 5.9199219 6 z M 9.7167969 8 L 16.880859 8 L 40.203125 42 L 33.039062 42 L 9.7167969 8 z"
+            ></path>
+          </svg>
+        </a>
+        <a
+          href="https://github.com/rudrodip/petme"
+          target="_blank"
+          class="github-link"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            x="0px"
+            y="0px"
+            width="100"
+            height="100"
+            viewBox="0 0 30 30"
+          >
+            <path
+              d="M15,3C8.373,3,3,8.373,3,15c0,5.623,3.872,10.328,9.092,11.63C12.036,26.468,12,26.28,12,26.047v-2.051 c-0.487,0-1.303,0-1.508,0c-0.821,0-1.551-0.353-1.905-1.009c-0.393-0.729-0.461-1.844-1.435-2.526 c-0.289-0.227-0.069-0.486,0.264-0.451c0.615,0.174,1.125,0.596,1.605,1.222c0.478,0.627,0.703,0.769,1.596,0.769 c0.433,0,1.081-0.025,1.691-0.121c0.328-0.833,0.895-1.6,1.588-1.962c-3.996-0.411-5.903-2.399-5.903-5.098 c0-1.162,0.495-2.286,1.336-3.233C9.053,10.647,8.706,8.73,9.435,8c1.798,0,2.885,1.166,3.146,1.481C13.477,9.174,14.461,9,15.495,9 c1.036,0,2.024,0.174,2.922,0.483C18.675,9.17,19.763,8,21.565,8c0.732,0.731,0.381,2.656,0.102,3.594 c0.836,0.945,1.328,2.066,1.328,3.226c0,2.697-1.904,4.684-5.894,5.097C18.199,20.49,19,22.1,19,23.313v2.734 c0,0.104-0.023,0.179-0.035,0.268C23.641,24.676,27,20.236,27,15C27,8.373,21.627,3,15,3z"
+            ></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <script type="module">
+      import { GIFEncoder, quantize, applyPalette } from "./gifenc.js";
+
+      const DEFAULT_RESOLUTION = 1024;
+      const FRAMES = 10;
+      const DEFAULT_DELAY = 20;
+
+      let currentImage = null;
+      let petImage = null;
+
+      const parameters = document.getElementById("parameters");
+      const resolutionInput = document.getElementById("resolution");
+      const framesInput = document.getElementById("frames");
+      const delayInput = document.getElementById("delay");
+
+      async function loadImage(source) {
+        const isFile = source instanceof File;
+        const url = isFile ? URL.createObjectURL(source) : source;
+
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          if (!isFile) {
+            img.crossOrigin = "anonymous";
+          }
+          img.onload = () => {
+            if (isFile) URL.revokeObjectURL(url);
+            resolve(img);
+          };
+          img.onerror = (event) => reject(event);
+          img.src = url;
         });
       }
 
-      gif.finish();
-      const blob = new Blob([gif.bytes()], { type: "image/gif" });
-      const url = URL.createObjectURL(blob);
-      return { url, blob };
-    }
-
-    const dropzone = document.getElementById('dropzone');
-    const fileInput = document.getElementById('file-input');
-    const preview = document.getElementById('preview');
-    const dropzoneText = document.getElementById('dropzone-text');
-    const generateBtn = document.getElementById('generate');
-    const loadingDiv = document.getElementById('loading');
-    const resultDiv = document.getElementById('result');
-    const resultImage = document.getElementById('result-image');
-    const removeBtn = document.getElementById('remove');
-    const downloadBtn = document.getElementById('download');
-
-    function handleImageUpload(file) {
-      const imageUrl = URL.createObjectURL(file);
-      currentImage = imageUrl;
-      preview.src = imageUrl;
-      preview.style.display = 'block';
-      dropzoneText.style.display = 'none';
-      generateBtn.style.display = 'block';
-      removeBtn.style.display = 'block';
-      resultDiv.style.display = 'none';
-      petImage = null;
-      parameters.style.display = 'block';
-    }
-
-    dropzone.addEventListener('click', () => fileInput.click());
-    
-    dropzone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropzone.style.backgroundColor = '#f3f4f6';
-    });
-
-    dropzone.addEventListener('dragleave', () => {
-      dropzone.style.backgroundColor = '';
-    });
-
-    dropzone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropzone.style.backgroundColor = '';
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) {
-        handleImageUpload(file);
-      }
-    });
-
-    fileInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        handleImageUpload(file);
-      }
-    });
-
-    generateBtn.addEventListener('click', async () => {
-      if (!currentImage) return;
-      
-      generateBtn.style.display = 'none';
-      loadingDiv.style.display = 'block';
-      parameters.style.display = 'none';
-      
-      try {
-        const { url, blob } = await createPetEffect(
-          currentImage,
-          parseInt(resolutionInput.value),
-          parseInt(framesInput.value),
-          parseInt(delayInput.value)
+      async function createPetEffect(
+        inputImage,
+        resolution = DEFAULT_RESOLUTION,
+        frameCount = FRAMES,
+        delay = DEFAULT_DELAY
+      ) {
+        const frames = await Promise.all(
+          Array.from({ length: frameCount }, (_, i) =>
+            loadImage(
+              `https://raw.githubusercontent.com/VenPlugs/petpet/main/frames/pet${
+                i % 10
+              }.gif`
+            )
+          )
         );
-        petImage = { url, blob };
-        resultImage.src = url;
-        resultDiv.style.display = 'block';
-      } catch (error) {
-        console.error('Failed to create pet effect:', error);
-        parameters.style.display = 'block';
-      } finally {
-        loadingDiv.style.display = 'none';
+
+        const avatar = await loadImage(inputImage);
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = resolution;
+        const ctx = canvas.getContext("2d");
+
+        const gif = new GIFEncoder();
+
+        for (let i = 0; i < frameCount; i++) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          const j = i < frameCount / 2 ? i : frameCount - i;
+          const width = 0.8 + j * 0.02;
+          const height = 0.8 - j * 0.05;
+          const offsetX = (1 - width) * 0.5 + 0.1;
+          const offsetY = 1 - height - 0.08;
+
+          ctx.drawImage(
+            avatar,
+            offsetX * resolution,
+            offsetY * resolution,
+            width * resolution,
+            height * resolution
+          );
+          ctx.drawImage(frames[i], 0, 0, resolution, resolution);
+
+          const imageData = ctx.getImageData(0, 0, resolution, resolution);
+          const { data } = imageData;
+
+          const pixels = new Uint8Array(data.buffer);
+          const palette = quantize(pixels, 256);
+          const index = applyPalette(pixels, palette);
+
+          gif.writeFrame(index, resolution, resolution, {
+            transparent: true,
+            palette,
+            delay: delay,
+          });
+        }
+
+        gif.finish();
+        const blob = new Blob([gif.bytes()], { type: "image/gif" });
+        const url = URL.createObjectURL(blob);
+        return { url, blob };
       }
-    });
 
-    downloadBtn.addEventListener('click', () => {
-      if (!petImage) return;
-      const link = document.createElement('a');
-      link.href = petImage.url;
-      link.download = 'pet-effect.gif';
-      link.click();
-    });
+      const dropzone = document.getElementById("dropzone");
+      const fileInput = document.getElementById("file-input");
+      const preview = document.getElementById("preview");
+      const dropzoneText = document.getElementById("dropzone-text");
+      const generateBtn = document.getElementById("generate");
+      const loadingDiv = document.getElementById("loading");
+      const resultDiv = document.getElementById("result");
+      const resultImage = document.getElementById("result-image");
+      const removeBtn = document.getElementById("remove");
+      const downloadBtn = document.getElementById("download");
 
-    removeBtn.addEventListener('click', () => {
-      currentImage = null;
-      petImage = null;
-      preview.style.display = 'none';
-      dropzoneText.style.display = 'block';
-      generateBtn.style.display = 'none';
-      removeBtn.style.display = 'none';
-      resultDiv.style.display = 'none';
-      fileInput.value = '';
-      parameters.style.display = 'none';
-    });
-  </script>
-</body>
+      function handleImageUpload(file) {
+        const imageUrl = URL.createObjectURL(file);
+        currentImage = imageUrl;
+        preview.src = imageUrl;
+        preview.style.display = "block";
+        dropzoneText.style.display = "none";
+        generateBtn.style.display = "block";
+        removeBtn.style.display = "block";
+        resultDiv.style.display = "none";
+        petImage = null;
+        parameters.style.display = "block";
+      }
+
+      dropzone.addEventListener("click", () => fileInput.click());
+
+      dropzone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropzone.style.backgroundColor = "#f3f4f6";
+      });
+
+      dropzone.addEventListener("dragleave", () => {
+        dropzone.style.backgroundColor = "";
+      });
+
+      dropzone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropzone.style.backgroundColor = "";
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith("image/")) {
+          handleImageUpload(file);
+        }
+      });
+
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          handleImageUpload(file);
+        }
+      });
+
+      generateBtn.addEventListener("click", async () => {
+        if (!currentImage) return;
+
+        generateBtn.style.display = "none";
+        loadingDiv.style.display = "block";
+        parameters.style.display = "none";
+
+        try {
+          const { url, blob } = await createPetEffect(
+            currentImage,
+            parseInt(resolutionInput.value),
+            parseInt(framesInput.value),
+            parseInt(delayInput.value)
+          );
+          petImage = { url, blob };
+          resultImage.src = url;
+          resultDiv.style.display = "block";
+        } catch (error) {
+          console.error("Failed to create pet effect:", error);
+          parameters.style.display = "block";
+        } finally {
+          loadingDiv.style.display = "none";
+        }
+      });
+
+      downloadBtn.addEventListener("click", () => {
+        if (!petImage) return;
+        const link = document.createElement("a");
+        link.href = petImage.url;
+        link.download = "pet-effect.gif";
+        link.click();
+      });
+
+      removeBtn.addEventListener("click", () => {
+        currentImage = null;
+        petImage = null;
+        preview.style.display = "none";
+        dropzoneText.style.display = "block";
+        generateBtn.style.display = "none";
+        removeBtn.style.display = "none";
+        resultDiv.style.display = "none";
+        fileInput.value = "";
+        parameters.style.display = "none";
+      });
+    </script>
+  </body>
 </html>
